@@ -256,11 +256,12 @@
         }
         var bermudaTriangle = new google.maps.Polygon({
           paths: points,
+          draggable: true,
+          editable: true,
           strokeColor: "#FF0000",
           strokeOpacity: 0.8,
           strokeWeight: 2,
           fillColor: "#FF0000",
-          fillOpacity: 0.35,
         });
         bermudaTriangle.setMap(map);
         // Creates a drawing manager attached to the map that allows the user to draw
