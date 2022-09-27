@@ -39,14 +39,16 @@
       #delete-button {
         margin-top: 5px;
       }
-      .del-search {
+      .del-search,
+      #delete-button {
         font-weight: 500;
         padding: 4px 10px;
         background: rgb(185, 45, 45);
         color: white;
         cursor: pointer;
       }
-      .del-search:hover {
+      .del-search:hover,
+      #delete-button:hover {
         color: rgb(185, 45, 45);
         background: white;
       }
@@ -73,7 +75,6 @@
         }
         pathstr = "" + selectedShape.getPath;
         if (typeof selectedShape.getPath == "function") {
-          console.log(selectedShape.getPath().getAt(0));
           pathstr = "[ ";
           for (var i = 0; i < selectedShape.getPath().getLength(); i++) {
             // .toUrlValue(5) limits number of decimals, default is 6 but can do more
@@ -201,11 +202,35 @@
       function initialize() {
         map = new google.maps.Map(document.getElementById("map"), {
           //var
-          zoom: 12, //10,
+          zoom: 16, //10,
           center: new google.maps.LatLng(41.8073536, -73.3380244), //(22.344, 114.048),
           mapTypeId: google.maps.MapTypeId.ROADMAP,
           disableDefaultUI: false,
           zoomControl: true,
+          mapTypeControl: true,
+          scaleControl: true,
+          streetViewControl: true,
+          rotateControl: true,
+          fullscreenControl: true,
+          mapTypeControlOptions: {
+            style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+            position: google.maps.ControlPosition.TOP_RIGHT,
+          },
+          zoomControlOptions: {
+            position: google.maps.ControlPosition.RIGHT_TOP,
+          },
+          scaleControlOptions: {
+            position: google.maps.ControlPosition.RIGHT_TOP,
+          },
+          streetViewControlOptions: {
+            position: google.maps.ControlPosition.RIGHT_TOP,
+          },
+          rotateControlOptions: {
+            position: google.maps.ControlPosition.RIGHT_TOP,
+          },
+          fullscreenControlOptions: {
+            position: google.maps.ControlPosition.RIGHT_TOP,
+          },
         });
         curposdiv = document.getElementById("curpos");
         curseldiv = document.getElementById("cursel");
@@ -213,7 +238,9 @@
           strokeWeight: 0,
           fillOpacity: 0.45,
           editable: true,
+          draggable: true,
         };
+
         // Creates a drawing manager attached to the map that allows the user to draw
         // markers, lines, and shapes.
         drawingManager = new google.maps.drawing.DrawingManager({
@@ -242,6 +269,7 @@
             // mouses down on it.
             var newShape = e.overlay;
             newShape.type = e.type;
+
             google.maps.event.addListener(newShape, "click", function () {
               setSelection(newShape, isNotMarker);
             });
