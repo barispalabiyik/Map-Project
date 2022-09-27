@@ -241,17 +241,17 @@
           draggable: true,
         };
         // Pre-define the polygon, rectangle, circle, and marker options.
-        var triangleCoords = [
+        var propertyArea = [
           [41.81056, -73.339355],
           [41.81048, -73.334183],
           [41.805442, -73.334312],
           [41.80541, -73.340299],
         ];
         var points = [];
-        for (var i = 0; i < triangleCoords.length; i++) {
+        for (var i = 0; i < propertyArea.length; i++) {
           points.push({
-            lat: triangleCoords[i][0],
-            lng: triangleCoords[i][1],
+            lat: propertyArea[i][0],
+            lng: propertyArea[i][1],
           });
         }
         var bermudaTriangle = new google.maps.Polygon({
