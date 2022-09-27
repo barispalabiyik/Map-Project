@@ -8,7 +8,7 @@
     <!-- NOTE: two libraries to load are comma-separated; otherwise last mention of the query string arg overwrites the previous -->
     <script
       type="text/javascript"
-      src="http://maps.google.com/maps/api/js?sensor=false&v=3.21.5a&libraries=drawing&signed_in=true&libraries=places,drawing"
+      src="http://maps.google.com/maps/api/js?sensor=false&v=3.21.5a&libraries=drawing&signed_in=true&libraries=places,drawing&key=AIzaSyBUgyGrH2kEMOYftKizc7hWlMolaUvzGyc"
     ></script>
     <style type="text/css">
       #map,
@@ -204,7 +204,7 @@
           //var
           zoom: 16, //10,
           center: new google.maps.LatLng(41.8073536, -73.3380244), //(22.344, 114.048),
-          mapTypeId: google.maps.MapTypeId.ROADMAP,
+          mapTypeId: google.maps.MapTypeId.SATELLITE,
           disableDefaultUI: false,
           zoomControl: true,
           mapTypeControl: true,
@@ -240,7 +240,29 @@
           editable: true,
           draggable: true,
         };
-
+        // Pre-define the polygon, rectangle, circle, and marker options.
+        var triangleCoords = [
+          [41.81056, -73.339355],
+          [41.81048, -73.334183],
+          [41.805442, -73.334312],
+          [41.80541, -73.340299],
+        ];
+        var points = [];
+        for (var i = 0; i < triangleCoords.length; i++) {
+          points.push({
+            lat: triangleCoords[i][0],
+            lng: triangleCoords[i][1],
+          });
+        }
+        var bermudaTriangle = new google.maps.Polygon({
+          paths: points,
+          strokeColor: "#FF0000",
+          strokeOpacity: 0.8,
+          strokeWeight: 2,
+          fillColor: "#FF0000",
+          fillOpacity: 0.35,
+        });
+        bermudaTriangle.setMap(map);
         // Creates a drawing manager attached to the map that allows the user to draw
         // markers, lines, and shapes.
         drawingManager = new google.maps.drawing.DrawingManager({
