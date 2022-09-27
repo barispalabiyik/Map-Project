@@ -42,7 +42,7 @@
       .del-search,
       #delete-button {
         font-weight: 500;
-        padding: 4px 10px;
+        padding: 10px 20px;
         background: rgb(185, 45, 45);
         color: white;
         cursor: pointer;
@@ -51,6 +51,27 @@
       #delete-button:hover {
         color: rgb(185, 45, 45);
         background: white;
+      }
+
+      /*Google Controls Custom CSS*/
+      .gm-style-mtc button {
+        background: #005aff !important;
+        color: white !important;
+        margin: 2px !important;
+      }
+      .del-search {
+        margin-top: 19px;
+      }
+      #pac-input {
+        margin-top: 20px !important;
+        padding: 5px 10px !important;
+        margin-left: 12px;
+        padding: 9px 15px;
+        text-overflow: ellipsis;
+        width: auto;
+      }
+      .gmnoprint div button {
+        padding: 10px 15px !important;
       }
     </style>
     <script type="text/javascript">
@@ -226,7 +247,7 @@
             position: google.maps.ControlPosition.RIGHT_TOP,
           },
           rotateControlOptions: {
-            position: google.maps.ControlPosition.RIGHT_TOP,
+            position: google.maps.ControlPosition.LEFT_BOTTOM,
           },
           fullscreenControlOptions: {
             position: google.maps.ControlPosition.RIGHT_TOP,
