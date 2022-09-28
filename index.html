@@ -1,11 +1,13 @@
-<!-- http://gmaps-samples-v3.googlecode.com/svn/trunk/drawing/drawing-tools.html -->
-<!-- https://developers.google.com/maps/documentation/javascript/examples/places-searchbox -->
 <html>
   <head>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-    <meta charset="UTF-8" />
-    <title>Drawing Tools (B)</title>
-    <!-- NOTE: two libraries to load are comma-separated; otherwise last mention of the query string arg overwrites the previous -->
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <title>TN Mapping Application</title>
+    <link rel="icon" href="favicon.ico" type="x-icon" />
+    <meta
+      name="description"
+      content="TN Mapping Application for the personal use"
+    />
     <script
       type="text/javascript"
       src="https://maps.google.com/maps/api/js?sensor=false&v=3.21.5a&libraries=drawing&signed_in=true&libraries=places,drawing&key=AIzaSyBUgyGrH2kEMOYftKizc7hWlMolaUvzGyc"
@@ -70,14 +72,22 @@
       }
       .del-search {
         margin-top: 19px;
+        left: 35% !important;
+        width: 40px;
+        border-radius: 10px !important;
+      }
+      button {
+        border-radius: 10px !important;
       }
       #pac-input {
         margin-top: 20px !important;
         padding: 5px 10px !important;
         margin-left: 12px;
-        padding: 9px 15px;
+        padding: 25px 35px;
         text-overflow: ellipsis;
-        width: auto;
+        width: 300px;
+        left: 40% !important;
+        border-radius: 10px !important;
       }
       .gmnoprint div button {
         padding: 10px 15px !important;
@@ -98,6 +108,7 @@
         }
         curseldiv.innerHTML = "<b>cursel</b>:";
       }
+      // sidebar shape paths and other info display function
       function updateCurSelText(shape) {
         posstr = "" + selectedShape.position;
         if (typeof selectedShape.position == "object") {
@@ -193,6 +204,7 @@
           }
         }
       }
+      // colors for the polygon, set the line color to white with an opacity of 0.8
       function makeColorButton(color) {
         var button = document.createElement("span");
         button.className = "color-button";
@@ -203,6 +215,7 @@
         });
         return button;
       }
+      // color picker
       function buildColorPalette() {
         var colorPalette = document.getElementById("color-palette");
         for (var i = 0; i < colors.length; ++i) {
@@ -228,12 +241,11 @@
         placeMarkers = [];
         input.value = ""; // clear the box too
       }
-      /////////////////////////////////////
       function initialize() {
         map = new google.maps.Map(document.getElementById("map"), {
-          //var
-          zoom: 16, //10,
-          center: new google.maps.LatLng(41.8073536, -73.3380244), //(22.344, 114.048),
+          // we are setting the map properties here (zoom, center, controls, etc)
+          zoom: 16, // 16 to get 100m to 1cm of screen to match architectural scale,
+          center: new google.maps.LatLng(41.8073536, -73.3380244),
           mapTypeId: google.maps.MapTypeId.SATELLITE,
           disableDefaultUI: false,
           zoomControl: true,
@@ -323,22 +335,25 @@
           [41.81136, -73.336179],
         ];
         var points = [];
+        // Construct the polygon.
         for (var i = 0; i < propertyArea.length; i++) {
           points.push({
             lat: propertyArea[i][0],
             lng: propertyArea[i][1],
           });
         }
-        var bermudaTriangle = new google.maps.Polygon({
+        // Set the polygon's editable properties
+        var parcelA = new google.maps.Polygon({
           paths: points,
           draggable: true,
           editable: true,
-          strokeColor: "#FF0000",
+          strokeColor: "#005aff",
           strokeOpacity: 0.8,
           strokeWeight: 2,
-          fillColor: "#FF0000",
+          fillColor: "#005aff",
         });
-        bermudaTriangle.setMap(map);
+        // Set the polygon to the map
+        parcelA.setMap(map);
         // Creates a drawing manager attached to the map that allows the user to draw
         // markers, lines, and shapes.
         drawingManager = new google.maps.drawing.DrawingManager({
@@ -355,6 +370,7 @@
           polygonOptions: polyOptions,
           map: map,
         });
+        // Add an event listener that selects the newly-drawn shape when the user finishes drawing.
         google.maps.event.addListener(
           drawingManager,
           "overlaycomplete",
@@ -377,10 +393,22 @@
             google.maps.event.addListener(newShape, "dragend", function () {
               updateCurSelText(newShape);
             });
+
             setSelection(newShape, isNotMarker);
             //~ }// end if
           }
         );
+
+        /*       google.maps.event.addListener(marker, "mouseover", function () {
+          // to display a tooltip:
+          marker.setTitle("Hi");
+
+          // to get the geographical position:
+          var pos = marker.getPosition();
+          var lat = pos.lat();
+          var lng = pos.lng();
+          // ...
+        }); */
         // Clear the current selection when the drawing mode is changed, or when the
         // map is clicked.
         google.maps.event.addListener(
