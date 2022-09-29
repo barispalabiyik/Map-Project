@@ -20,16 +20,19 @@
         margin: 0;
         height: 100%;
       }
+
       #panel {
-        width: 200px;
+        width: 270px;
         font-family: Arial, sans-serif;
         font-size: 13px;
         float: right;
         margin: 10px;
       }
+
       #color-palette {
         clear: both;
       }
+
       .color-button {
         width: 14px;
         height: 14px;
@@ -38,9 +41,11 @@
         float: left;
         cursor: pointer;
       }
+
       #delete-button {
         margin-top: 5px;
       }
+
       .del-search,
       #delete-button {
         font-weight: 500;
@@ -49,11 +54,13 @@
         color: white;
         cursor: pointer;
       }
+
       .del-search:hover,
       #delete-button:hover {
         color: rgb(185, 45, 45);
         background: white;
       }
+
       .proje {
         position: absolute;
         top: 14%;
@@ -61,24 +68,29 @@
         z-index: -1;
         display: none;
       }
+
       #map {
         opacity: 1;
       }
+
       /*Google Controls Custom CSS*/
       .gm-style-mtc button {
         background: #005aff !important;
         color: white !important;
         margin: 2px !important;
       }
+
       .del-search {
         margin-top: 19px;
         left: 35% !important;
         width: 40px;
         border-radius: 10px !important;
       }
+
       button {
         border-radius: 10px !important;
       }
+
       #pac-input {
         margin-top: 20px !important;
         padding: 5px 10px !important;
@@ -89,10 +101,14 @@
         left: 40% !important;
         border-radius: 10px !important;
       }
+
       .gmnoprint div button {
         padding: 10px 15px !important;
       }
     </style>
+  </head>
+
+  <body>
     <script type="text/javascript">
       var drawingManager;
       var selectedShape;
@@ -111,15 +127,21 @@
       // sidebar shape paths and other info display function
       function updateCurSelText(shape) {
         posstr = "" + selectedShape.position;
+        //posstr = posstr.replace(/\s/g, "");
         if (typeof selectedShape.position == "object") {
           posstr = selectedShape.position.toUrlValue();
         }
+        //pathstr = pathstr.replace(/\s/g, ""); and create path display string
         pathstr = "" + selectedShape.getPath;
         if (typeof selectedShape.getPath == "function") {
           pathstr = "[ ";
           for (var i = 0; i < selectedShape.getPath().getLength(); i++) {
             // .toUrlValue(5) limits number of decimals, default is 6 but can do more
-            pathstr += selectedShape.getPath().getAt(i).toUrlValue() + " , ";
+            pathstr +=
+              "[ " +
+              selectedShape.getPath().getAt(i).toUrlValue() +
+              " ] " +
+              " , ";
           }
           pathstr += "]";
         }
@@ -234,6 +256,7 @@
       var searchBox;
       var curposdiv;
       var curseldiv;
+      var currentdiv;
       function deletePlacesSearchResults() {
         for (var i = 0, marker; (marker = placeMarkers[i]); i++) {
           marker.setMap(null);
@@ -241,6 +264,7 @@
         placeMarkers = [];
         input.value = ""; // clear the box too
       }
+
       function initialize() {
         map = new google.maps.Map(document.getElementById("map"), {
           // we are setting the map properties here (zoom, center, controls, etc)
@@ -276,6 +300,7 @@
         });
         curposdiv = document.getElementById("curpos");
         curseldiv = document.getElementById("cursel");
+        currentdiv = document.getElementById("current");
         var polyOptions = {
           strokeWeight: 0,
           fillOpacity: 0.45,
@@ -342,7 +367,6 @@
             lng: propertyArea[i][1],
           });
         }
-        console.log(points);
         // Set the polygon's editable properties
         var parcelA = new google.maps.Polygon({
           paths: points,
@@ -355,7 +379,7 @@
         });
         // Set the polygon to the map
         parcelA.setMap(map);
-
+        // Second polygon
         var propertyArea2 = [
           [41.807953, -73.347058],
           [41.810257, -73.34738],
@@ -385,29 +409,40 @@
         // Loop through all paths in the polygon and add listeners
         // to them. If we just used `getPath()` then we wouldn't
         // detect all changes to shapes like donuts.
+
+        updateCurrentDiv = (parcel) => {
+          let parcelPaths = parcel
+            .getPaths()
+            .getArray()
+            .map((path) => {
+              return path.getArray().map((latLng) => {
+                return [latLng.lat(), latLng.lng()];
+              });
+            });
+          currentdiv.innerHTML = JSON.stringify(parcelPaths);
+        };
+
         parcelB.getPaths().forEach(function (path, index) {
-          google.maps.event.addListener(path, "insert_at", function () {
-            // New point
+          google.maps.event.addListener(path, "click", function () {
+            updateCurrentDiv(parcelB);
           });
 
           google.maps.event.addListener(path, "remove_at", function () {
-            // Point was removed
+            updateCurrentDiv(parcelB);
+          });
+
+          google.maps.event.addListener(path, "insert_at", function () {
+            updateCurrentDiv(parcelB);
           });
 
           google.maps.event.addListener(path, "set_at", function () {
-            console.log(
-              parcelB
-                .getPath()
-                .getArray()
-                .map(function (p) {
-                  return [p.lat(), p.lng()];
-                })
-            );
+            updateCurrentDiv(parcelB);
           });
         });
         google.maps.event.addListener(parcelB, "dragend", function () {
-          console.log("wow");
+          updateCurrentDiv(parcelB);
         });
+        // Second polygon end here
         // Creates a drawing manager attached to the map that allows the user to draw
         // markers, lines, and shapes.
         drawingManager = new google.maps.drawing.DrawingManager({
@@ -442,6 +477,7 @@
             }
           }
         );
+
         // Add an event listener that selects the newly-drawn shape when the user finishes drawing.
         google.maps.event.addListener(
           drawingManager,
@@ -470,17 +506,6 @@
             //~ }// end if
           }
         );
-
-        /*       google.maps.event.addListener(marker, "mouseover", function () {
-          // to display a tooltip:
-          marker.setTitle("Hi");
-
-          // to get the geographical position:
-          var pos = marker.getPosition();
-          var lat = pos.lat();
-          var lng = pos.lng();
-          // ...
-        }); */
         // Clear the current selection when the drawing mode is changed, or when the
         // map is clicked.
         google.maps.event.addListener(
@@ -560,11 +585,12 @@
             " C: " +
             map.getCenter().toUrlValue();
         }); //////////////////////
-      }
+      } // end initMap
+
       google.maps.event.addDomListener(window, "load", initialize);
+      // [END region_initialize]
+      // [START region_data]
     </script>
-  </head>
-  <body>
     <div id="panel">
       <div id="color-palette"></div>
       <div>
@@ -572,6 +598,7 @@
       </div>
       <div id="curpos"></div>
       <div id="cursel"></div>
+      <div id="current"></div>
       <div id="note">
         <small
           >In order to add more areas that are persistent, please draw the area
