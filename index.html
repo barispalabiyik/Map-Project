@@ -122,7 +122,6 @@
           }
           selectedShape = null;
         }
-        curseldiv.innerHTML = "<b>cursel</b>:";
       }
       // sidebar shape paths and other info display function
       function updateCurSelText(shape) {
@@ -167,21 +166,19 @@
         }
         curseldiv.innerHTML =
           "<b>New Shape Info</b>: " +
+          "<br><b>Type</b>: " +
           selectedShape.type +
           " " +
-          selectedShape +
-          "; <i>pos</i>: " +
-          posstr +
-          " ; <b>path</b>: " +
-          pathstr +
-          " ; <i>bounds</i>: " +
+          "<br> <b>Coordinates</b>: " +
+          pathstr;
+        /*           " ; <i>bounds</i>: " +
           bndstr +
           " ; <i>Cb</i>: " +
           cntstr +
           " ; <i>radius</i>: " +
           radstr +
           " ; <i>Cr</i>: " +
-          cntrstr;
+          cntrstr; */
       }
       function setSelection(shape, isNotMarker) {
         clearSelection();
@@ -421,7 +418,7 @@
                 });
               });
             currentdiv.innerHTML =
-              "<b>Current Shape Coordinates:</b> <br>" +
+              "<br><b>Current Shape Coordinates:</b> <br>" +
               JSON.stringify(parcelPaths);
           }, 100);
         };
@@ -593,9 +590,9 @@
           var bounds = map.getBounds();
           searchBox.setBounds(bounds);
           curposdiv.innerHTML =
-            "<b>curpos</b> Z: " +
+            "<br><b>INFO </b> <br> <b>Zoom:</b> " +
             map.getZoom() +
-            " C: " +
+            " <b><br>Center Coordinate:</b> " +
             map.getCenter().toUrlValue();
         }); //////////////////////
       } // end initMap
