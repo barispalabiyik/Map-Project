@@ -503,7 +503,7 @@ function initialize() {
     var bounds = map.getBounds();
     searchBox.setBounds(bounds);
     curposdiv.innerHTML =
-      "<br><b style='font-size:1.5rem'>INFORMATION </b> <br> <b>Zoom:</b> " +
+      "<br><b style='font-size:1.2vw'>INFORMATION </b> <br> <b>Zoom:</b> " +
       map.getZoom() +
       " <b><br>Center Coordinate:</b> " +
       map.getCenter().toUrlValue();
