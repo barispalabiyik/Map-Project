@@ -54,7 +54,7 @@ function updateCurSelText(shape) {
     "<br><b>Type</b>: " +
     selectedShape.type +
     " " +
-    "<br> <b>Coordinates</b>: " +
+    "<br> <b>Coordinates</b>:<br> " +
     pathstr;
   /*           " ; <i>bounds</i>: " +
           bndstr +
@@ -151,7 +151,7 @@ function initialize() {
   map = new google.maps.Map(document.getElementById("map"), {
     // we are setting the map properties here (zoom, center, controls, etc)
     zoom: 16, // 16 to get 100m to 1cm of screen to match architectural scale,
-    center: new google.maps.LatLng(41.805594, -73.340621) /* 41.804666,
+    center: new google.maps.LatLng(41.805306, -73.340771) /* 41.804666,
       -73.340428 */,
     mapTypeId: google.maps.MapTypeId.SATELLITE,
     disableDefaultUI: false,
@@ -503,7 +503,7 @@ function initialize() {
     var bounds = map.getBounds();
     searchBox.setBounds(bounds);
     curposdiv.innerHTML =
-      "<br><b>INFO </b> <br> <b>Zoom:</b> " +
+      "<br><b style='font-size:1.5rem'>INFORMATION </b> <br> <b>Zoom:</b> " +
       map.getZoom() +
       " <b><br>Center Coordinate:</b> " +
       map.getCenter().toUrlValue();
