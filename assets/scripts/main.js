@@ -21,13 +21,16 @@ function updateCurSelText(shape) {
   //pathstr = pathstr.replace(/\s/g, ""); and create path display string
   pathstr = "" + selectedShape.getPath;
   if (typeof selectedShape.getPath == "function") {
-    pathstr = "[ ";
+    pathstr = "  ";
     for (var i = 0; i < selectedShape.getPath().getLength(); i++) {
       // .toUrlValue(5) limits number of decimals, default is 6 but can do more
       pathstr +=
-        "[ " + selectedShape.getPath().getAt(i).toUrlValue() + " ] " + " , ";
+        "[ " +
+        selectedShape.getPath().getAt(i).toUrlValue() +
+        " ] " +
+        " ,<br> ";
     }
-    pathstr += "]";
+    pathstr += "";
   }
   bndstr = "" + selectedShape.getBounds;
   cntstr = "" + selectedShape.getBounds;
@@ -331,7 +334,7 @@ function initialize() {
           });
         });
       currentdiv.innerHTML =
-        "<br><b>Current Shape Coordinates:</b> <br>" +
+        "<br><b>Selected Updated Shape Coordinates:</b> <br>" +
         JSON.stringify(parcelPaths);
     }, 100);
   };
@@ -415,6 +418,9 @@ function initialize() {
       var newShape = e.overlay;
       newShape.type = e.type;
 
+      if (newShape.type == "polygon") {
+        parcelEventHandler(newShape);
+      }
       google.maps.event.addListener(newShape, "click", function () {
         setSelection(newShape, isNotMarker);
       });
